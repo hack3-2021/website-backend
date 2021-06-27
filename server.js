@@ -100,7 +100,7 @@ app.get('/api/community', async (req, res) => {
   	const commentRows = await runQuery('SELECT * FROM comments WHERE postID=' + postRow.postID + ';');
   	let comments = [];
   	for (const comment of commentRows) {
-  	  const commentUser = (await runQuery('SELECT * FROM users WHERE userID=' + userID + ";"))[0];
+  	  const commentUser = (await runQuery('SELECT * FROM users WHERE userID=' + comment.userID + ";"))[0];
   	  comments.push({
   	  	"poster": {
   	      "email": commentUser.email,
