@@ -183,7 +183,7 @@ app.get('/api/create_user', async (req, res) => {
   
   runQuery('' +
   'INSERT INTO users (email, firstName, lastName, picture, bio, phoneNumber, vaccinated, communityID) ' +
-  'VALUES (' + email + ',' + firstName + ',' + lastName + ',' + pictureLink + ',' + bio + ',' + phoneNumber + ',' + vaccinated + ',' + communityID + ');'
+  'VALUES (' + connection.escape(email) + ',' + connection.escape(firstName) + ',' + connection.escape(lastName) + ',' + connection.escape(pictureLink) + ',' + connection.escape(bio) + ',' + connection.escape(phoneNumber) + ',' + vaccinated + ',' + communityID + ');'
   ).then(response => {
   	res.sendStatus(200);
   }, error => {
