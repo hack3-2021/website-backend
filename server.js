@@ -160,7 +160,7 @@ app.get('/api/comment', async (req, res) => {
   const userID = (await runQuery('SELECT * FROM users WHERE email=' + connection.escape(email) + ';'))[0].userID;
 
   runQuery('' +
-  'INSERT INTO comments (postID, userID, contents, posted)' +
+  'INSERT INTO comments (postID, userID, contents, posted) ' +
   'VALUES (' + postID + ',' + userID + ',' + connection.escape(msg) + ', NOW())'
   ).then(response => {
   	res.sendStatus(200);
@@ -182,7 +182,7 @@ app.get('/api/create_user', async (req, res) => {
   const communityID = (await runQuery('SELECT communityID FROM communities WHERE suburb=' + connection.escape(community) + ';'))[0].communityID;
   
   runQuery('' +
-  'INSERT INTO users (email, firstName, lastName, picture, bio, phoneNumber, vaccinated, communityID)' +
+  'INSERT INTO users (email, firstName, lastName, picture, bio, phoneNumber, vaccinated, communityID) ' +
   'VALUES (' + email + ',' + firstName + ',' + lastName + ',' + pictureLink + ',' + bio + ',' + phoneNumber + ',' + vaccinated + ',' + communityID + ');'
   ).then(response => {
   	res.sendStatus(200);
