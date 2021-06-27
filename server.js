@@ -55,7 +55,7 @@ app.get('/api/profile', async (req, res) => {
   let communityID = row.communityID;
   const suburbResponse = await runQuery('SELECT suburb FROM communities WHERE communityID=' + communityID + ';');
   let suburb = suburbResponse[0].suburb;
-  
+
   response = {
   	"email": row.email,
   	"firstName": row.firstName,
@@ -67,6 +67,71 @@ app.get('/api/profile', async (req, res) => {
   	"suburb": suburb
   }
   res.send(JSON.stringify(response));
+})
+
+app.get('/api/profile/picture', async (req, res) => {
+  email = req.query.email;
+  const rows = await runQuery('SELECT * FROM users WHERE email=' + connection.escape(email) + ';')
+  if (rows.length == 0) {
+  	res.sendStatus(404);
+  	return;
+  }
+  console.log(rows);
+  let row = rows[0];
+
+  res.send(row.picture);
+})
+
+app.get('/api/community', async (req, res) => {
+  community = req.query.community;
+  const communityRows = await runQuery('SELECT * FROM communities WHERE suburb=' + connection.escape(community) + ';');
+  if (communityRows.length == 0) {
+	res.sendStatus(404);
+	return;
+  }
+  let communityID = communityRows[0].communityID;
+  const postRows = await runQuery('SELECT * FROM posts WHERE communityID=' + communityID + ' ORDER BY posted DESC;');
+  console.log(postRows);
+  let posts = [];
+  for (const postRow of postRows) {
+  	let userID = postRow.userID;
+  	const userRow = (await runQuery('SELECT * FROM users WHERE userID=' + userID + ';'))[0];
+  	console.log(userRow)
+  	const commentRows = await runQuery('SELECT * FROM comments WHERE postID=' + postRow.postID + ';');
+  	let comments = [];
+  	for (const comment of commentRows) {
+  	  const commentUser = (await runQuery('SELECT * FROM users WHERE userID=' + userID + ";"))[0];
+  	  comments.push({
+  	  	"poster": {
+  	      "email": commentUser.email,
+  		  "firstName": commentUser.firstName,
+  		  "lastName": commentUser.lastName,
+  		  "picture": commentUser.picture,
+  		  "bio": commentUser.bio,
+  		  "phoneNumber": commentUser.phoneNumber,
+  		  "vaccinated": commentUser.vaccinated
+  	  	},
+  	  	"msg": comment.contents,
+  	  	"posted": comment.posted
+  	  });
+  	}
+  	posts.push({
+  	  "poster": {
+  	  	"email": userRow.email,
+  		"firstName": userRow.firstName,
+  		"lastName": userRow.lastName,
+  		"picture": userRow.picture,
+  		"bio": userRow.bio,
+  		"phoneNumber": userRow.phoneNumber,
+  		"vaccinated": userRow.vaccinated
+  	  },
+  	  "msg": postRow.contents,
+  	  "posted": postRow.posted,
+  	  "comments": comments
+  	});
+  }
+
+  res.send(JSON.stringify(posts));
 })
 
 app.listen(port, () => {
