@@ -90,7 +90,7 @@ app.get('/api/community', async (req, res) => {
 	return;
   }
   let communityID = communityRows[0].communityID;
-  const postRows = await runQuery('SELECT * FROM posts WHERE communityID=' + communityID + ' ORDER BY posted DESC;');
+  const postRows = await runQuery('SELECT * FROM posts WHERE communityID=' + communityID + ' ORDER BY posted ASC;');
   console.log(postRows);
   let posts = [];
   for (const postRow of postRows) {
