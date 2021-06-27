@@ -192,6 +192,10 @@ app.get('/api/create_user', async (req, res) => {
   });
 });
 
+app.get('/api/ping', async (req, res) => {
+	res.sendStatus(200);
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
