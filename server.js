@@ -127,12 +127,30 @@ app.get('/api/community', async (req, res) => {
   	  },
   	  "msg": postRow.contents,
   	  "posted": postRow.posted,
-  	  "comments": comments
+  	  "comments": comments,
+  	  "postID": postRow.postID
   	});
   }
 
   res.send(JSON.stringify(posts));
-})
+});
+
+app.post('/api/post', async (req, res) => {
+  let community = req.query.community;
+  let email = req.query.email;
+  let msg = req.query.msg;
+  const userID = (await runQuery('SELECT * FROM users WHERE email=' + connection.escape(email) + ';'))[0].userID;
+  const communityID = (await runQuery('SELECT communityID FROM communities WHERE suburb=' + connection.escape(community) + ';'))[0].communityID;
+
+  runQuery('' +
+  'INSERT INTO posts (userID, communityID, contents, posted) ' + 
+  'VALUES (' + userID + ',' + communityID + ',' + connection.escape(msg) + ', NOW()' + ');'
+  ).then(response => {
+  	res.sendStatus(200);
+  }, error => {
+  	res.sendStatus(500)
+  })
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
