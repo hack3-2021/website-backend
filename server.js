@@ -36,7 +36,7 @@ runQuery = (query) => {
 	return new Promise((resolve, reject) => {
 		connection.query(query, (err, rows) => {
 			if (err) {
-				return reject(error);
+				return reject(err);
 			}
 			return resolve(rows);
 		})
