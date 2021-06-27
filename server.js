@@ -148,8 +148,25 @@ app.post('/api/post', async (req, res) => {
   ).then(response => {
   	res.sendStatus(200);
   }, error => {
-  	res.sendStatus(500)
-  })
+    console.log(error);
+  	res.sendStatus(500);
+  });
+});
+
+app.get('/api/comment', async (req, res) => {
+  let email = req.query.email;
+  let msg = req.query.msg;
+  const userID = (await runQuery('SELECT * FROM users WHERE email=' + connection.escape(email) + ';'))[0].userID;
+
+  runQuery('' +
+  'INSERT INTO comments (postID, userID, contents, posted)' +
+  'VALUES (' + postID + ',' + userID + ',' + connection.escape(msg) + ', NOW())'
+  ).then(response => {
+  	res.sendStatus(200);
+  }, error => {
+    console.log(error);
+  	res.sendStatus(500);
+  });
 });
 
 app.post('/api/create_user', async (req, res) => {
@@ -165,10 +182,11 @@ app.post('/api/create_user', async (req, res) => {
   
   runQuery('' +
   'INSERT INTO users (email, firstName, lastName, picture, bio, phoneNumber, vaccinated, communityID)' +
-  'VALUES (' + email + ',' + firstName + ',' + lastName + ',' + pictureLink + ',' + bio + ',' + phoneNumber + ',' + vaccinated + ',' communityID + ');'
+  'VALUES (' + email + ',' + firstName + ',' + lastName + ',' + pictureLink + ',' + bio + ',' + phoneNumber + ',' + vaccinated + ',' + communityID + ');'
   ).then(response => {
   	res.sendStatus(200);
   }, error => {
+  	console.log(error);
   	res.sendStatus(500);
   });
 });
