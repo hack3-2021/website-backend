@@ -153,7 +153,8 @@ app.post('/api/post', async (req, res) => {
   });
 });
 
-app.get('/api/comment', async (req, res) => {
+app.post('/api/comment', async (req, res) => {
+  let postID = req.query.postID;
   let email = req.query.email;
   let msg = req.query.msg;
   const userID = (await runQuery('SELECT * FROM users WHERE email=' + connection.escape(email) + ';'))[0].userID;
