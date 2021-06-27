@@ -135,7 +135,7 @@ app.get('/api/community', async (req, res) => {
   res.send(JSON.stringify(posts));
 });
 
-app.post('/api/post', async (req, res) => {
+app.get('/api/post', async (req, res) => {
   let community = req.query.community;
   let email = req.query.email;
   let msg = req.query.msg;
@@ -153,7 +153,7 @@ app.post('/api/post', async (req, res) => {
   });
 });
 
-app.post('/api/comment', async (req, res) => {
+app.get('/api/comment', async (req, res) => {
   let postID = req.query.postID;
   let email = req.query.email;
   let msg = req.query.msg;
@@ -170,7 +170,7 @@ app.post('/api/comment', async (req, res) => {
   });
 });
 
-app.post('/api/create_user', async (req, res) => {
+app.get('/api/create_user', async (req, res) => {
   let email = req.query.email;
   let firstName = req.query.firstName;
   let lastName = req.query.lastName;
