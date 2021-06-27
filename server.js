@@ -152,6 +152,27 @@ app.post('/api/post', async (req, res) => {
   })
 });
 
+app.post('/api/create_user', async (req, res) => {
+  let email = req.query.email;
+  let firstName = req.query.firstName;
+  let lastName = req.query.lastName;
+  let pictureLink = req.query.pictureLink;
+  let bio = req.query.bio;
+  let phoneNumber = req.query.phoneNumber;
+  let vaccinated = req.query.vaccinated;
+  let community = req.query.community;
+  const communityID = (await runQuery('SELECT communityID FROM communities WHERE suburb=' + connection.escape(community) + ';'))[0].communityID;
+  
+  runQuery('' +
+  'INSERT INTO users (email, firstName, lastName, picture, bio, phoneNumber, vaccinated, communityID)' +
+  'VALUES (' + email + ',' + firstName + ',' + lastName + ',' + pictureLink + ',' + bio + ',' + phoneNumber + ',' + vaccinated + ',' communityID + ');'
+  ).then(response => {
+  	res.sendStatus(200);
+  }, error => {
+  	res.sendStatus(500);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
