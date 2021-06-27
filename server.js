@@ -4,8 +4,6 @@ require('dotenv').config()
 const app = express()
 const port = 3000
 
-console.log(process.env.DB_PASS)
-
 var connection = mysql.createConnection({
   host: 'localhost',
   user: 'hack3',
@@ -15,16 +13,10 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
-connection.query('QUERY', function (err, rows, fields) {
-  if (err) throw err
-
-  console.log('The solution is: ', rows[0].solution)
-})
-
-
-app.get('/api/profile', (req, res) => {
+app.get('/api/profile', async (req, res) => {
   email = req.query.email;
-  res.send('email: ' + email)
+  const rows = await connection.query('SELECT * FROM users WHERE email=' + connection.escape(email))
+  console.log(rows)
 })
 
 app.listen(port, () => {
